@@ -94,7 +94,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
 
@@ -104,19 +104,19 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +126,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 const createUsernames = function (accs) {
@@ -155,6 +155,7 @@ const updateUI = function (acc) {
 // Event handlers
 let currentAccount;
 
+//============ Login Function ============
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
@@ -164,7 +165,7 @@ btnLogin.addEventListener('click', function (e) {
   );
   console.log(currentAccount);
 
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+  if (currentAccount?.pin === +inputLoginPin.value) {
     // Display UI and message
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
@@ -180,9 +181,10 @@ btnLogin.addEventListener('click', function (e) {
   }
 });
 
+//============ Transfer Function ============
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
@@ -203,10 +205,11 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
+//============ Request Loan Function ============
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
@@ -218,12 +221,13 @@ btnLoan.addEventListener('click', function (e) {
   inputLoanAmount.value = '';
 });
 
+//============ Delete Account Function ============
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
 
   if (
     inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    +inputClosePin.value === currentAccount.pin
   ) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
@@ -241,6 +245,7 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername.value = inputClosePin.value = '';
 });
 
+//============ Sort Function ============
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
@@ -251,3 +256,158 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+// Base 10 => 0 to 9;
+// Binary Base 2 => 0, 1;
+
+// console.log(Math.trunc(0.1 + 0.2) === Math.trunc(0.3));
+
+// Conversion
+// console.log(Number('23'));
+// console.log(+'23');
+
+//========= Parsing =========
+// console.log(Number.parseInt('30px', 10));
+// console.log(Number.parseInt('e25', 10));
+
+// console.log(Number.parseInt('2.5rem'));
+// console.log(Number.parseFloat('2.5rem'));
+
+// Check if value is NaN
+// console.log(Number.isNaN(20));
+// console.log(Number.isNaN('20'));
+// console.log(Number.isNaN(+'20x'));
+// console.log(Number.isNaN(23 / 0));
+
+// Checking if value is number
+// console.log(Number.isFinite(20));
+// console.log(Number.isFinite('20'));
+// console.log(Number.isFinite(+'20x'));
+// console.log(Number.isFinite(23 / 0));
+
+// Check if value is interger
+// console.log(Number.isInteger(23));
+// console.log(Number.isInteger(23.0));
+// console.log(Number.isInteger(23 / 0));
+
+// Math and Rounding
+
+// Math Operations
+// console.log(Math.sqrt(25));
+// console.log(25 ** (1 / 2));
+// console.log(8 ** (1 / 3));
+
+// console.log(Math.max(5, 18, 23, 11, 2));
+// console.log(Math.max(5, 18, '23', 11, 2));
+// console.log(Math.max(5, 18, '23px', 11, 2)); //It doesnot parseInt
+
+// console.log(Math.min(5, 18, 23, 11, 2));
+
+// console.log(Math.PI * Number.parseFloat('10px') ** 2);
+
+// console.log(Math.trunc(Math.random() * 6) + 1);
+
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min) + 1) + min;
+//0...1 -> 0... (max - min) -> min...max
+
+// console.log(randomInt(10,20));
+
+// Rounding Integers
+// console.log(Math.trunc(23.5));
+
+// console.log(Math.round(23.3)); //Rounds Down
+// console.log(Math.round(23.8)); //Rounds Up
+
+// Ceil rounds up
+// console.log(Math.ceil(23.8));
+// console.log(Math.ceil(23.2));
+
+// Floor Rounds Down
+// console.log(Math.floor(23.8));
+// console.log(Math.floor(23.8));
+// console.log(Math.round('23.8'));
+
+// console.log(Math.trunc(-23.3));
+// console.log(Math.floor(-23.3));
+
+// Rounding Decimals
+// console.log((2.7).toFixed(0));
+// console.log((2.7).toFixed(3));
+// console.log((2.73235).toFixed(3));
+// console.log(+(2.73235).toFixed(3));
+
+//======= Remainder Operator =======
+// console.log(5 % 2);
+// console.log(5 / 2); // 5 = 2*2 + 1
+
+// console.log(8 % 3);
+// console.log(8 / 3); // 8 = 2*3 + 2
+
+// Even Number
+// console.log(6 % 2);
+// console.log(6 / 2);
+
+// console.log(7 % 2);
+// console.log(7 / 2);
+
+const isEven = n => n % 2 === 0;
+// console.log(isEven(8));
+// console.log(isEven(23));
+// console.log(isEven(54));
+
+labelBalance.addEventListener('click', function () {
+  [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+    // 0,2,4,6
+    if (i % 2 === 0) row.style.backgroundColor = 'orangered';
+    // 0,3,6,9
+    if (i % 3 === 0) row.style.backgroundColor = 'blue';
+  });
+});
+
+// Working with BIGINT
+// console.log(2**53-1);
+// console.log(Number.MAX_SAFE_INTEGER);
+// console.log(2**53-2);
+// console.log(2**53-3);
+// console.log(2**53-4);
+// console.log(2**53-5);
+// console.log(2**53-6);
+// console.log(2**53-7);
+
+// console.log(2749789283295938407593737287534n);
+// console.log(BigInt(2749789283295938407593737287534));
+// console.log(BigInt(27497892832));
+
+// Operations
+
+// console.log(10000n + 10000n);
+// console.log(891247475841256279407894789247749408694n * 7293476497495475698n);
+
+// const huge =23597853047874278n;
+// const num = 23;
+// console.log(huge * BigInt(num));
+
+// Exceptions
+// console.log(20n > 15);
+// console.log(20n === 20);
+// console.log(typeof 20n);
+// console.log(20n == '20');
+
+// console.log(huge + ' is REALLY big!!!!');
+
+// Divisions
+// console.log(11n / 3n);
+// console.log(10/3);
+
+// Create a Date
+const now = new Date();
+// console.log(now);
+
+// console.log(new Date('Jul 10 2023 16:49:00'));
+// console.log(new Date('December 24, 2015'));
+
+// console.log(new Date(account1.movementsDates[0]));
+
+// console.log(new Date(2037, 10, 17, 23, 15, 45));
+// console.log(new Date(2034, 10, 45));
+
