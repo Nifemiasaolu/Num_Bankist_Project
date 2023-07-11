@@ -151,7 +151,7 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
-//////////////////////////////////////
+///////////////////////////////////////
 // Event handlers
 let currentAccount;
 
