@@ -54,4 +54,4 @@ const checkEatingOkay = dog =>
 // 8.
 const dogSorted = dogs.slice().sort((a,b) => a.recFood - b.recFood);
 // console.log(dogSorted);
-//////
+///////
