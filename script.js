@@ -155,6 +155,19 @@ const updateUI = function (acc) {
 // Event handlers
 let currentAccount;
 
+// FAKE ALWAYS LOGGED IN 
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
+
+const now = new Date();
+const day = `${now.getDate()}`.padStart(2, 0);
+const month = `${now.getMonth() + 1}`.padStart(2, 0);
+const year = now.getFullYear();
+const hour = now.getHours();
+const minutes = now.getMinutes();
+labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
+
 //============ Login Function ============
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -306,8 +319,8 @@ btnSort.addEventListener('click', function (e) {
 
 // console.log(Math.trunc(Math.random() * 6) + 1);
 
-const randomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min) + 1) + min;
+// const randomInt = (min, max) =>
+//   Math.floor(Math.random() * (max - min) + 1) + min;
 //0...1 -> 0... (max - min) -> min...max
 
 // console.log(randomInt(10,20));
@@ -350,19 +363,19 @@ const randomInt = (min, max) =>
 // console.log(7 % 2);
 // console.log(7 / 2);
 
-const isEven = n => n % 2 === 0;
+// const isEven = n => n % 2 === 0;
 // console.log(isEven(8));
 // console.log(isEven(23));
 // console.log(isEven(54));
 
-labelBalance.addEventListener('click', function () {
-  [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
-    // 0,2,4,6
-    if (i % 2 === 0) row.style.backgroundColor = 'orangered';
-    // 0,3,6,9
-    if (i % 3 === 0) row.style.backgroundColor = 'blue';
-  });
-});
+// labelBalance.addEventListener('click', function () {
+//   [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+//     // 0,2,4,6
+//     if (i % 2 === 0) row.style.backgroundColor = 'orangered';
+//     // 0,3,6,9
+//     if (i % 3 === 0) row.style.backgroundColor = 'blue';
+//   });
+// });
 
 // Working with BIGINT
 // console.log(2**53-1);
@@ -400,7 +413,7 @@ labelBalance.addEventListener('click', function () {
 // console.log(10/3);
 
 // Create a Date
-const now = new Date();
+// const now = new Date();
 // console.log(now);
 
 // console.log(new Date('Jul 10 2023 16:49:00'));
@@ -411,3 +424,25 @@ const now = new Date();
 // console.log(new Date(2037, 10, 17, 23, 15, 45));
 // console.log(new Date(2034, 10, 45));
 
+// console.log(new Date(0));
+// console.log(new Date(3 * 24 * 60 * 1000));
+
+// Working with dates 
+// const future = new Date(2037, 10, 17, 23, 15, 45);
+// console.log(future);
+// console.log(future.getFullYear());
+// console.log(future.getMonth());
+// console.log(future.getDate());
+// console.log(future.getHours());
+// console.log(future.getMinutes());
+// console.log(future.getSeconds());
+// console.log(future.toISOString());
+// console.log(future.getTime());
+
+// console.log(new Date(2142108945000));
+
+// console.log(Date.now());
+
+// // Set Method 
+// future.setFullYear(2040);
+// console.log(future);
