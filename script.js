@@ -288,7 +288,7 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
-//============ Request Loan Function ============
+//=========== Request Loan Function ============
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
