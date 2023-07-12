@@ -99,13 +99,42 @@ const formatMovementDate = function (date, locale) {
   return new Intl.DateTimeFormat(locale).format(date);
 };
 
-// Refactored Format Currency Function 
-const formatCur = function(value, locale, currency) {
+// Refactored Format Currency(API) Function
+const formatCur = function (value, locale, currency) {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,
-  }).format(value)
-}
+  }).format(value);
+};
+
+// LogOutTimer Function
+const startLogoutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+
+    // In each call, print the remaining time to UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    // When zero second, stop timer and logout
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+    }
+    // Decrease by 1s
+    time--;
+  };
+
+  // Set time to 5 minutes
+  let time = 120;
+
+  // Call the timer every second
+  tick();
+  const timer = setInterval(tick, 1000);
+
+  return timer;
+};
 
 //========== Display Movement Fuunction ==========
 const displayMovements = function (acc, sort = false) {
@@ -124,7 +153,7 @@ const displayMovements = function (acc, sort = false) {
 
     // Automatic Internationalizing Number Generation
     const formattedMov = formatCur(mov, acc.locale, acc.currency);
-    
+
     // Each Movement row
     const html = `
       <div class="movements__row">
@@ -144,7 +173,7 @@ const displayMovements = function (acc, sort = false) {
 //========== Display Balance Fuunction ==========
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  const formatBalance = formatCur(acc.balance, acc.locale, acc.currency)
+  const formatBalance = formatCur(acc.balance, acc.locale, acc.currency);
   labelBalance.textContent = `${formatBalance}`;
 };
 
@@ -154,7 +183,6 @@ const calcDisplaySummary = function (acc) {
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumIn.textContent = formatCur(incomes, acc.locale, acc.currency);
-  
 
   const out = acc.movements
     .filter(mov => mov < 0)
@@ -198,12 +226,12 @@ const updateUI = function (acc) {
 
 //////////////////////////////////////////////////
 //=============== Event handlers Function ===============
-let currentAccount;
+let currentAccount, timer;
 
 // FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 //============ Login Function ============
 btnLogin.addEventListener('click', function (e) {
@@ -255,6 +283,10 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
+    // Timer
+    if (timer) clearInterval(timer);
+    timer = startLogoutTimer();
+
     // Update UI
     updateUI(currentAccount);
   }
@@ -285,6 +317,10 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    // Reset Timer
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -295,14 +331,20 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
+    setTimeout(function () {
+      // Add movement
+      currentAccount.movements.push(amount);
 
-    // Add Loan Date
-    currentAccount.movementsDates.push(new Date().toISOString());
+      // Add Loan Date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    // Update UI
-    updateUI(currentAccount);
+      // Update UI
+      updateUI(currentAccount);
+
+      // Reset Timer
+      clearInterval(timer);
+      timer = startLogoutTimer();
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
@@ -547,3 +589,24 @@ const option = {
 //   navigator.language,
 //   new Intl.NumberFormat(navigator.language).format(num)
 // );
+
+//============ SetTimeout and SetTImeInterval Function ============
+// SetTimeOut
+const ingredients = ['olives', ''];
+const pizzaTimer = setTimeout(
+  (ing1, ing2) => {
+    // console.log(`Here is your Pizza with ${ing1} and ${ing2}`);
+  },
+  3000,
+  ...ingredients
+);
+// console.log('Waiting...');
+if (ingredients.includes('spinach')) clearTimeout(pizzaTimer);
+
+// SetInterval
+setInterval(function () {
+  const now = new Date();
+  const timer =
+    `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`.padStart(2, 0);
+  // console.log(timer);
+}, 1000);
